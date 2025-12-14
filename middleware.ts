@@ -1,8 +1,9 @@
 import { type NextRequest, NextResponse } from 'next/server'
-import { updateSession } from './utils/supabase/middleware'
+// import { updateSession } from './utils/supabase/middleware'
 
 export async function middleware(request: NextRequest) {
-    return await updateSession(request)
+    // Completely bypassing Supabase to isolate the __dirname error
+    return NextResponse.next()
 }
 
 export const config = {
