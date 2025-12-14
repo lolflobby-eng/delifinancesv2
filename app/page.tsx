@@ -49,10 +49,12 @@ export default function Home() {
       if (session) {
         setSession(session);
         refreshData();
+      } else {
+        router.replace('/auth');
       }
       setLoading(false);
     });
-  }, []);
+  }, [router]);
 
   const changeMonth = (offset: number) => {
     const newDate = new Date(currentDate);
