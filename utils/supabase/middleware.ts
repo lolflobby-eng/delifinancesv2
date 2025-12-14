@@ -6,17 +6,15 @@ export async function updateSession(request: NextRequest) {
         request,
     })
 
-    // Safety check for Env Vars
-    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-        // If vars are missing, just passthrough to let client-side handle it (or crash gracefully)
-        return supabaseResponse
-    }
+    // Hardcoded keys to prevent 500 Error in Edge Runtime
+    const supabaseUrl = 'https://scxwoijurerfnbscfmeh.supabase.co';
+    const supabaseKey = 'sb_publishable_7OVF1WnvWz-npfym9KqIAA_7GlrqV8g';
 
     let supabase;
     try {
         supabase = createServerClient(
-            process.env.NEXT_PUBLIC_SUPABASE_URL,
-            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+            supabaseUrl,
+            supabaseKey,
             {
                 cookies: {
                     getAll() {

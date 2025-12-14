@@ -2,9 +2,7 @@ import { type NextRequest, NextResponse } from 'next/server'
 import { updateSession } from './utils/supabase/middleware'
 
 export async function middleware(request: NextRequest) {
-    // TEMPORARY FIX: Bypassing auth check to verify site can load (fixing 500 error)
-    // return await updateSession(request)
-    return NextResponse.next()
+    return await updateSession(request)
 }
 
 export const config = {
