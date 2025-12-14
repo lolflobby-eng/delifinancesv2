@@ -1,0 +1,75 @@
+:root {
+  /* Futuristic Neon Palette */
+  --background-dark: #05050a; /* Deep void black */
+  --background-card: rgba(20, 20, 35, 0.6); /* Glass effect base */
+  
+  --accent-primary: #00f3ff; /* Neon Cyan */
+  --accent-secondary: #bc13fe; /* Neon Purple */
+  --accent-success: #0aff68; /* Neon Green */
+  --accent-warning: #ffb800; /* Neon Gold */
+  --accent-danger: #ff0055; /* Neon Red */
+
+  --text-main: #ffffff;
+  --text-muted: #a0a0b0;
+
+  --font-main: 'Inter', sans-serif; /* Setup in layout */
+
+  /* Effects */
+  --glass-border: 1px solid rgba(255, 255, 255, 0.1);
+  --glass-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  --neon-glow-primary: 0 0 10px rgba(0, 243, 255, 0.5);
+  --neon-glow-secondary: 0 0 10px rgba(188, 19, 254, 0.5);
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  background-color: var(--background-dark);
+  color: var(--text-main);
+  font-family: var(--font-main);
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--background-dark); 
+}
+::-webkit-scrollbar-thumb {
+  background: #333; 
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-primary); 
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Utility Classes */
+.glass-panel {
+  background: var(--background-card);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  border-radius: 12px;
+}
+
+.neon-text {
+  text-shadow: var(--neon-glow-primary);
+}
+
+.neon-border {
+  border-color: var(--accent-primary);
+  box-shadow: var(--neon-glow-primary);
+}

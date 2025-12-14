@@ -1,0 +1,63 @@
+/* globals.css - Neon dark theme and glassmorphism */
+
+/* Font import */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
+
+:root {
+  /* Base colors */
+  --bg-primary: #0a0a0a;
+  --bg-secondary: #111111;
+  --text-primary: #ffffff;
+  --text-muted: #888888;
+
+  /* Accent colors */
+  --accent-primary: #00f3ff;   /* cyan */
+  --accent-secondary: #ff00ff; /* magenta */
+  --accent-success: #00ff00;   /* green */
+  --accent-danger: #ff0000;    /* red */
+  --accent-warning: #ffae00;   /* orange */
+
+  /* Neon glow effects */
+  --neon-glow-primary: 0 0 10px var(--accent-primary);
+  --neon-glow-secondary: 0 0 10px var(--accent-secondary);
+
+  /* Glass effect */
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.1);
+}
+
+/* Global resets */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  font-family: 'Inter', sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+/* Utility classes */
+.bg-dark {
+  background-color: var(--bg-primary);
+}
+
+.glass-panel {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+}
+
+.neon-text {
+  color: var(--accent-primary);
+  text-shadow: 0 0 5px var(--accent-primary);
+}
+
+/* Button hover effect */
+button:hover {
+  filter: brightness(1.2);
+}
