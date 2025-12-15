@@ -8,6 +8,11 @@ export default function DeliveryTab({ logs, onUpdate, date, userId, t }: { logs:
     const [incomeCommission, setIncomeCommission] = useState('');
     const [expenseAmount, setExpenseAmount] = useState('');
     const [expenseCategory, setExpenseCategory] = useState('');
+
+    // Date States
+    const [incomeDate, setIncomeDate] = useState(new Date().toISOString().split('T')[0]);
+    const [expenseDate, setExpenseDate] = useState(new Date().toISOString().split('T')[0]);
+
     const [categories, setCategories] = useState<ExpenseCategory[]>([]);
     const [newCatName, setNewCatName] = useState('');
     const [isAddingCat, setIsAddingCat] = useState(false);
@@ -36,17 +41,17 @@ export default function DeliveryTab({ logs, onUpdate, date, userId, t }: { logs:
         const { error } = await supabase.from('delivery_logs').insert({
             user_id: userId,
             type: 'income',
-            amount: total,
-            delivery_price: parseFloat(incomePrice),
             commission_profit: parseFloat(incomeCommission),
             description: 'Delivery Income',
-            date: new Date().toISOString().split('T')[0]
+            date: incomeDate
         });
 
         if (error) alert(error.message);
         else {
             setIncomePrice('');
+            setIncomePrice('');
             setIncomeCommission('');
+            // Keep date as is or reset? Usually nicer to keep if entering many for same day, but requirement handles "backdating" mainly.
             onUpdate();
         }
     };
@@ -60,7 +65,7 @@ export default function DeliveryTab({ logs, onUpdate, date, userId, t }: { logs:
             amount: parseFloat(expenseAmount),
             category: expenseCategory,
             description: expenseCategory,
-            date: new Date().toISOString().split('T')[0]
+            date: expenseDate
         });
 
         if (error) alert(error.message);
@@ -143,6 +148,7 @@ export default function DeliveryTab({ logs, onUpdate, date, userId, t }: { logs:
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                         <NeonInput placeholder={t.deliveryPrice} type="number" value={incomePrice} onChange={e => setIncomePrice(e.target.value)} />
                         <NeonInput placeholder={t.commissionProfit} type="number" value={incomeCommission} onChange={e => setIncomeCommission(e.target.value)} />
+                        <NeonInput type="date" value={incomeDate} onChange={e => setIncomeDate(e.target.value)} />
                         <NeonButton onClick={handleSaveIncome} variant="success">{t.addIncome}</NeonButton>
                     </div>
                 </GlassCard>
@@ -151,6 +157,7 @@ export default function DeliveryTab({ logs, onUpdate, date, userId, t }: { logs:
                     <h3 style={{ color: 'var(--accent-danger)', marginBottom: '1rem' }}>{t.registerExpense}</h3>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                         <NeonInput placeholder={t.amount} type="number" value={expenseAmount} onChange={e => setExpenseAmount(e.target.value)} />
+                        <NeonInput type="date" value={expenseDate} onChange={e => setExpenseDate(e.target.value)} />
 
                         <div style={{ display: 'flex', gap: '0.5rem' }}>
                             <select

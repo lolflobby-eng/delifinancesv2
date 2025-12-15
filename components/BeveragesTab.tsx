@@ -15,6 +15,7 @@ export default function BeveragesTab({ date, transactions, onUpdate, userId, t }
     // Transaction State
     const [selectedProd, setSelectedProd] = useState('');
     const [transQuantity, setTransQuantity] = useState('');
+    const [transDate, setTransDate] = useState(new Date().toISOString().split('T')[0]);
 
     useEffect(() => {
         fetchProducts();
@@ -82,7 +83,7 @@ export default function BeveragesTab({ date, transactions, onUpdate, userId, t }
             type,
             quantity: qty,
             total_amount: amount,
-            date: new Date().toISOString().split('T')[0] // today's date always for new trans
+            date: transDate
         });
 
         if (transError) {
@@ -149,6 +150,7 @@ export default function BeveragesTab({ date, transactions, onUpdate, userId, t }
                             ))}
                         </select>
                         <NeonInput placeholder={t.quantity} type="number" value={transQuantity} onChange={e => setTransQuantity(e.target.value)} />
+                        <NeonInput type="date" value={transDate} onChange={e => setTransDate(e.target.value)} />
                         <div style={{ display: 'flex', gap: '1rem' }}>
                             <NeonButton onClick={() => handleTransaction('sale')} variant="success" style={{ flex: 1 }}>{t.sell}</NeonButton>
                             <NeonButton onClick={() => handleTransaction('purchase')} variant="danger" style={{ flex: 1 }}>{t.buyRestock}</NeonButton>
