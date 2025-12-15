@@ -1,50 +1,60 @@
-import { createServerClient } from '@supabase/ssr'
-import { cookies } from 'next/headers'
-import { redirect } from 'next/navigation'
+'use client';
+import { useEffect, useState } from 'react';
+import { supabase } from '@/lib/supabaseClient';
+import { useRouter } from 'next/navigation';
 
-export default async function ProtectedLayout({
+export default function ProtectedLayout({
     children,
 }: {
     children: React.ReactNode
 }) {
-    const cookieStore = cookies()
+    const router = useRouter();
+    const [loading, setLoading] = useState(true);
 
-    const supabase = createServerClient(
-        'https://scxwoijurerfnbscfmeh.supabase.co',
-        'sb_publishable_7OVF1WnvWz-npfym9KqIAA_7GlrqV8g',
-        {
-            cookies: {
-                getAll() {
-                    return cookieStore.getAll()
-                },
-                setAll(cookiesToSet: { name: string, value: string, options: any }[]) {
-                    // Layouts strictly can't set cookies in Next.js Server Components,
-                    // but we need the client for reading.
-                },
-            },
-        }
-    )
+    useEffect(() => {
+        const checkAuth = async () => {
+            const { data: { user } } = await supabase.auth.getUser();
 
-    const { data: { user } } = await supabase.auth.getUser()
+            if (!user) {
+                router.replace('/auth');
+                return;
+            }
 
-    if (!user) {
-        redirect('/auth')
-    }
+            // Check Profile Approval
+            const { data: profile } = await supabase
+                .from('profiles')
+                .select('is_approved')
+                .eq('id', user.id)
+                .single();
 
-    // Check Profile Approval
-    const { data: profile } = await supabase
-        .from('profiles')
-        .select('is_approved')
-        .eq('id', user.id)
-        .single()
+            if (!profile || !profile.is_approved) {
+                router.replace('/approval-pending');
+            }
 
-    if (!profile || !profile.is_approved) {
-        redirect('/approval-pending')
+            setLoading(false);
+        };
+
+        checkAuth();
+    }, [router]);
+
+    if (loading) {
+        return (
+            <div style={{
+                height: '100vh',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                background: '#000',
+                color: '#fff'
+            }}>
+                Checking Access Permissions...
+            </div>
+        );
     }
 
     return (
         <>
             {children}
         </>
-    )
+    );
 }
