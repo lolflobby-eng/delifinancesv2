@@ -9,17 +9,20 @@ import BeveragesTab from '@/components/BeveragesTab';
 import InvestmentsTab from '@/components/InvestmentsTab';
 import SummaryTab from '@/components/SummaryTab';
 import StrategyTab from '@/components/StrategyTab';
+import AdminTab from '@/components/AdminTab';
 import { DeliveryLog, BeverageTransaction, InvestmentRecord } from '@/lib/models';
 import { translations, Language } from '@/lib/translations';
 
-type Tab = 'dashboard' | 'delivery' | 'beverages' | 'investments' | 'calendar' | 'strategy';
+type Tab = 'dashboard' | 'delivery' | 'beverages' | 'investments' | 'calendar' | 'strategy' | 'admin';
 
 export default function Home() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<Tab>('dashboard');
   const [session, setSession] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [lang, setLang] = useState<Language>('es'); // Default to Spanish per user implied context, or User preference.
+  const [isAdmin, setIsAdmin] = useState(false);
 
   // Global Date State (Month/Year)
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -48,6 +51,10 @@ export default function Home() {
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) {
         setSession(session);
+        // Check Admin
+        supabase.from('profiles').select('role').eq('id', session.user.id).single().then(({ data }) => {
+          if (data?.role === 'admin') setIsAdmin(true);
+        });
         refreshData();
       } else {
         router.replace('/auth');
@@ -115,7 +122,9 @@ export default function Home() {
             <NavButton active={activeTab === 'beverages'} onClick={() => setActiveTab('beverages')}>{t.beverages}</NavButton>
             <NavButton active={activeTab === 'investments'} onClick={() => setActiveTab('investments')}>{t.investment}</NavButton>
             <NavButton active={activeTab === 'calendar'} onClick={() => setActiveTab('calendar')}>{t.calendar}</NavButton>
+            <NavButton active={activeTab === 'calendar'} onClick={() => setActiveTab('calendar')}>{t.calendar}</NavButton>
             <NavButton active={activeTab === 'strategy'} onClick={() => setActiveTab('strategy')}>{t.strategy}</NavButton>
+            {isAdmin && <NavButton active={activeTab === 'admin'} onClick={() => setActiveTab('admin')}>Admin</NavButton>}
           </nav>
           <NeonButton variant="danger" onClick={() => supabase.auth.signOut()} style={{ padding: '0.6rem 1rem', fontSize: '0.9rem' }}>{t.signOut}</NeonButton>
         </div>
@@ -127,7 +136,9 @@ export default function Home() {
         {activeTab === 'beverages' && <BeveragesTab userId={session?.user?.id} date={currentDate} transactions={beverageTrans} onUpdate={refreshData} t={t} />}
         {activeTab === 'investments' && <InvestmentsTab userId={session?.user?.id} date={currentDate} currentBalance={currentBalance} logs={investments} deliveryLogs={deliveryLogs} beverageTrans={beverageTrans} onUpdate={refreshData} t={t} />}
         {activeTab === 'calendar' && <CalendarView date={currentDate} deliveryLogs={deliveryLogs} beverageLogs={beverageTrans} onDateChange={setCurrentDate} t={t} />}
+        {activeTab === 'calendar' && <CalendarView date={currentDate} deliveryLogs={deliveryLogs} beverageLogs={beverageTrans} onDateChange={setCurrentDate} t={t} />}
         {activeTab === 'strategy' && <StrategyTab deliveryLogs={deliveryLogs} beverageTrans={beverageTrans} investments={investments} t={t} />}
+        {activeTab === 'admin' && <AdminTab />}
       </div>
     </main>
   );
