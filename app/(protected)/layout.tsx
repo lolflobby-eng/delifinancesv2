@@ -7,7 +7,7 @@ export default async function ProtectedLayout({
 }: {
     children: React.ReactNode
 }) {
-    const cookieStore = await cookies()
+    const cookieStore = cookies()
 
     const supabase = createServerClient(
         'https://scxwoijurerfnbscfmeh.supabase.co',
