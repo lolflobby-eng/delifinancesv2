@@ -17,7 +17,7 @@ export default async function ProtectedLayout({
                 getAll() {
                     return cookieStore.getAll()
                 },
-                setAll(cookiesToSet) {
+                setAll(cookiesToSet: { name: string, value: string, options: any }[]) {
                     // Layouts strictly can't set cookies in Next.js Server Components,
                     // but we need the client for reading.
                 },
