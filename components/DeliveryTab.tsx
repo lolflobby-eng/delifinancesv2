@@ -41,6 +41,8 @@ export default function DeliveryTab({ logs, onUpdate, date, userId, t }: { logs:
         const { error } = await supabase.from('delivery_logs').insert({
             user_id: userId,
             type: 'income',
+            amount: total,
+            delivery_price: parseFloat(incomePrice),
             commission_profit: parseFloat(incomeCommission),
             description: 'Delivery Income',
             date: incomeDate
@@ -48,7 +50,6 @@ export default function DeliveryTab({ logs, onUpdate, date, userId, t }: { logs:
 
         if (error) alert(error.message);
         else {
-            setIncomePrice('');
             setIncomePrice('');
             setIncomeCommission('');
             // Keep date as is or reset? Usually nicer to keep if entering many for same day, but requirement handles "backdating" mainly.
