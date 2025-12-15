@@ -20,7 +20,6 @@ export default function Home() {
   const [activeTab, setActiveTab] = useState<Tab>('dashboard');
   const [session, setSession] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [loading, setLoading] = useState(true);
   const [lang, setLang] = useState<Language>('es'); // Default to Spanish per user implied context, or User preference.
   const [isAdmin, setIsAdmin] = useState(false);
 
