@@ -21,13 +21,16 @@ export default function ProtectedLayout({
             }
 
             // Check Profile Approval
-            const { data: profile } = await supabase
+            const { data: profile, error } = await supabase
                 .from('profiles')
                 .select('is_approved')
                 .eq('id', user.id)
                 .single();
 
+            console.log('ProtectedLayout Check:', { userId: user.id, profile, error });
+
             if (!profile || !profile.is_approved) {
+                console.log('Redirecting to pending...');
                 router.replace('/approval-pending');
             }
 
